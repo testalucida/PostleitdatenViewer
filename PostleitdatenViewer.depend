@@ -1,0 +1,74 @@
+# depslib dependency file v1.0
+1492258050 source:/home/martin/projects/cpp/PostleitdatenViewer/main.cpp
+	<iostream>
+	<FL/Fl.H>
+	<FL/Fl_Double_Window.H>
+
+1474018052 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl.H
+	<FL/Fl_Export.H>
+	<FL/platform_types.h>
+	<FL/Fl_Cairo.H>
+	"fl_utf8.h"
+	"Enumerations.H"
+	<stdio.h>
+	<FL/Fl.H>
+	<FL/Fl_Window.H>
+
+1408624188 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Export.H
+
+1489447898 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/platform_types.h
+	<stddef.h>
+	<stdint.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<dirent.h>
+	<sys/stat.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<dirent.h>
+
+1455386537 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Cairo.H
+	<FL/Fl_Export.H>
+	<cairo.h>
+
+1460198537 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/fl_utf8.h
+	"Fl_Export.H"
+	"fl_types.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1434399881 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/fl_types.h
+
+1488713250 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Enumerations.H
+	<FL/abi-version.h>
+	"Fl_Export.H"
+	"fl_types.h"
+	<FL/platform_types.h>
+
+1492243056 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/abi-version.h
+
+1460809730 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Window.H
+	<FL/Fl.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Bitmap.H>
+	<stdlib.h>
+
+1415657351 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Group.H
+	"Fl_Widget.H"
+
+1461424106 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Widget.H
+	"Enumerations.H"
+
+1478208489 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Bitmap.H
+	"Fl_Image.H"
+	"Fl_Widget.H"
+
+1478120895 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Image.H
+	"Enumerations.H"
+	<stdlib.h>
+	"Fl_Widget.H"
+
+1457907397 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Double_Window.H
+	"Fl_Window.H"
+
