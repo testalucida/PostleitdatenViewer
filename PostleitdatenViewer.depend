@@ -1,8 +1,14 @@
 # depslib dependency file v1.0
-1492258050 source:/home/martin/projects/cpp/PostleitdatenViewer/main.cpp
+1492294055 source:/home/martin/projects/cpp/PostleitdatenViewer/main.cpp
 	<iostream>
 	<FL/Fl.H>
 	<FL/Fl_Double_Window.H>
+	<FL/Fl_Input.H>
+	<FL/Fl_Table.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Return_Button.H>
+	"PostleitdatenManager.h"
+	"PostleitData.h"
 
 1474018052 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl.H
 	<FL/Fl_Export.H>
@@ -71,4 +77,58 @@
 
 1457907397 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Double_Window.H
 	"Fl_Window.H"
+
+1459971555 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Input.H
+	"Fl_Input_.H"
+
+1437486913 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Input_.H
+	"Fl_Widget.H"
+
+1458960914 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Table.H
+	<sys/types.h>
+	<string.h>
+	<malloc.h>
+	<stdlib.h>
+	<FL/Fl.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Scroll.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Scrollbar.H>
+
+1461526767 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Scroll.H
+	"Fl_Group.H"
+	"Fl_Scrollbar.H"
+
+1317536713 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Scrollbar.H
+	"Fl_Slider.H"
+
+1338219552 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Slider.H
+	"Fl_Valuator.H"
+
+1457445061 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Valuator.H
+	"Fl_Widget.H"
+
+1345195086 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Box.H
+	"Fl_Widget.H"
+
+1413749837 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Button.H
+	"Fl_Widget.H"
+
+1343104642 /home/martin/projects/cpp/fltk-1.4.x-r12219/FL/Fl_Return_Button.H
+	"Fl_Button.H"
+
+1492295218 source:/home/martin/projects/cpp/PostleitdatenViewer/PostleitdatenManager.cpp
+	"PostleitdatenManager.h"
+	"PostleitData.h"
+	<fstream>
+	<string.h>
+
+1492293939 /home/martin/projects/cpp/PostleitdatenViewer/PostleitdatenManager.h
+	<string>
+	<list>
+	"PostleitData.h"
+
+1492292649 /home/martin/projects/cpp/PostleitdatenViewer/PostleitData.h
+	<string>
+	<list>
 
