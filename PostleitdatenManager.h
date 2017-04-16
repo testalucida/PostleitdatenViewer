@@ -35,6 +35,8 @@ class PostleitdatenManager
 
         void getKgs( const std::string& plz, const std::string& ort, std::string& kgs ) const;
         void getKgs( const std::string& plz, KgsList& kgsList ) const;
+        void printPL() const;
+        void print( const char* pLabel, const char* s, int n, bool newLine = false ) const;
     private:
         std::string _plfilename;
         std::string _SBfile;

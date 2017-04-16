@@ -73,30 +73,90 @@ void PostleitdatenManager::writePartFiles() {
 
 }
 
+//void PostleitdatenManager::loadPartFiles() {
+//    ifstream plfile( _PLfile );
+//    string line;
+//
+//    PL *pPL = new PL;
+//    while( plfile.get( pPL->PLrecord, PL_RECORD_LEN ) ) {
+//        pPL->satzende = 0x00;
+//        fprintf( stderr, "%s\n", pPL->PLrecord );
+//        _plList.push_back( pPL );
+//        PL &pl = *pPL;
+//        pPL = new PL;
+//    }
+//
+//    plfile.close();
+//
+//    printf( "Anzahl PL-Sätze: %d\n", _plList.size() );
+//    printPL();
+//
+//    ifstream sbfile( _SBfile );
+//    SB *pSB = new SB;
+//    while( sbfile.get( pSB->SBrecord, SB_RECORD_LEN )) {
+//        pSB->_SB.satzende = 0x00;
+//        _sbList.push_back( pSB );
+//        pSB = new SB;
+//    }
+//
+//    sbfile.close();
+//
+//    printf( "Anzahl SB-Sätze: %d\n", _sbList.size() );
+//}
+
 void PostleitdatenManager::loadPartFiles() {
     ifstream plfile( _PLfile );
     string line;
 
-    PL *pPL = new PL;
-    while( plfile.get( pPL->PLrecord, PL_RECORD_LEN ) ) {
-        _plList.push_back( pPL );
-        pPL = new PL;
+    if( plfile.good() ) {
+
+        while( getline( plfile, line ) ) {
+            fprintf( stderr, "Satzlaenge: %d\n%s\n", line.length(), line.c_str() );
+        }
+
+        plfile.close();
+
+        printf( "Anzahl PL-Sätze: %d\n", _plList.size() );
+        printPL();
+
     }
+}
 
-    plfile.close();
 
-    printf( "Anzahl PL-Sätze: %d\n", _plList.size() );
+//void PostleitdatenManager::printPL() const {
+//    for( auto itr = _plList.begin(); itr != _plList.end(); itr++ ) {
+//        PL *pl = *itr;
+//
+//        print( "Version: ", pl->_PL.version, 9 );
+//        print( "\tDatum: ", pl->_PL.datum, 8, true );
+//        print( "PLZ: ", pl->_PL.plz, 5 );
+//        print( "\tOrt: ", pl->_PL.oname, 40, true );
+//        print( "KGS: ", pl->_PL.kgs, 8 );
+//    }
+//}
 
-    ifstream sbfile( _SBfile );
-    SB *pSB = new SB;
-    while( sbfile.get( pSB->SBrecord, SB_RECORD_LEN )) {
-        _sbList.push_back( pSB );
-        pSB = new SB;
+void PostleitdatenManager::printPL() const {
+    for( auto itr = _plList.begin(); itr != _plList.end(); itr++ ) {
+        PL *pl = *itr;
+
+        print( "Version: ", pl->version, 9 );
+        print( "\tDatum: ", pl->datum, 8, true );
+        print( "PLZ: ", pl->plz, 5 );
+        print( "\tOrt: ", pl->oname, 40, true );
+        print( "KGS: ", pl->kgs, 8 );
     }
+}
 
-    sbfile.close();
-
-    printf( "Anzahl SB-Sätze: %d\n", _sbList.size() );
+void PostleitdatenManager::print( const char* pLabel, const char* s, int n, bool newLine ) const {
+    if( pLabel ) {
+        fprintf( stderr, "%s", pLabel );
+    }
+    for( int i = 0; i < n; i++ ) {
+        fprintf( stderr, "%c", *s++ );
+    }
+    if( newLine ) {
+        fprintf( stderr, "\n" );
+    }
 }
 
 void PostleitdatenManager::
@@ -115,13 +175,13 @@ void PostleitdatenManager::getKgs( const std::string& plz, const std::string& or
     for( ; itr != _plList.end(); itr++ ) {
         PL* pPL = *itr;
         string p, o;
-        p.append( pPL->_PL.plz, 5 );
-        o.append( pPL->_PL.oname, 40 );
+        p.append( pPL->plz, 5 );
+        o.append( pPL->oname, 40 );
         fprintf( stderr, "PLZ: %s, Ort: %s\n", p.c_str(), o.c_str() );
-        if( !strncmp( pPL->_PL.plz, plz.c_str(), 5 ) &&
-            !strncmp( pPL->_PL.oname, ort.c_str(), 40 ) )
+        if( !strncmp( pPL->plz, plz.c_str(), 5 ) &&
+            !strncmp( pPL->oname, ort.c_str(), 40 ) )
         {
-            kgs.append( pPL->_PL.kgs, 8 );
+            kgs.append( pPL->kgs, 8 );
             break;
         }
     }
@@ -133,12 +193,12 @@ void PostleitdatenManager::getKgs( const std::string& plz, KgsList& kgsList ) co
     auto itr = _plList.begin();
     for( ; itr != _plList.end(); itr++ ) {
         PL* pPL = *itr;
-        if( !strcmp( pPL->_PL.plz, plz.c_str() ) )
+        if( !strcmp( pPL->plz, plz.c_str() ) )
         {
             Kgs kgs;
-            kgs.plz.append( pPL->_PL.plz, 5 );
-            kgs.ort.append( pPL->_PL.oname, 40 );
-            kgs.kgs.append( pPL->_PL.kgs, 8 );
+            kgs.plz.append( pPL->plz, 5 );
+            kgs.ort.append( pPL->oname, 40 );
+            kgs.kgs.append( pPL->kgs, 8 );
             kgsList.push_back( kgs );
         }
     }

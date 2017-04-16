@@ -28,19 +28,19 @@ struct PL {
         char la_alort[8];
         char kgs[8];
         char ortcode[3];
-        char leitcode_max[3];
+        char leitcode_max[3]; //160
         char rabatt_info_schwer;
         char reserve[2];
         char fz_nr[2];
         char bz_nr[2];
         char satzende; //'$' -> wird zu 0x00
-    } _PL;
+    } ;
 };
 
 struct SB {
     char SBrecord[SB_RECORD_LEN];
 
-    union _SB {
+    union {
 
         char version [9];
         char datum [8];
@@ -66,7 +66,7 @@ struct SB {
         char hnr_von_neu[8];
         char hnr_bis_neu[8];
         char satzende; //'$' -> wird zu 0x00
-    };
+    } _SB;
 };
 
 struct Strasse {
