@@ -4,43 +4,42 @@
 #include <string>
 #include <list>
 
-static const int PL_RECORD_LEN = 168;
-static const int SB_RECORD_LEN = 234;
+static const int RECORD_LEN = 325;
 
-struct PL {
-    char PLrecord[PL_RECORD_LEN];
+union PL {
+    char PLrecord[RECORD_LEN];
 
-    union  {
+    struct  {
 
-        char version [9];
-        char datum [8];
-        char plz [5];
-        char alort[8];
-        char art[2];
-        char stverz;
-        char pfverz;
-        char oname[40];
-        char ozusatz[30];
-        char art_ozusatz;
-        char oname24[24];
-        char postlag; //130
-        char la_brief[8];
-        char la_alort[8];
-        char kgs[8];
+        char version [9]; //0-8
+        char datum [8];   //9-16
+        char plz [5];     //17-21
+        char alort[8];    //22-29
+        char art[2];      //30-31
+        char stverz;      //32
+        char pfverz;      //33
+        char oname[40];   //34-73
+        char ozusatz[30]; //74-103
+        char art_ozusatz; //104
+        char oname24[24]; //105-128
+        char postlag;     //129
+        char la_brief[8]; //130-137
+        char la_alort[8]; //138-145
+        char kgs[8];      //146-153
         char ortcode[3];
         char leitcode_max[3]; //160
         char rabatt_info_schwer;
         char reserve[2];
         char fz_nr[2];
         char bz_nr[2];
-        char satzende; //'$' -> wird zu 0x00
+        char satzende; //'$' 
     } ;
 };
 
-struct SB {
-    char SBrecord[SB_RECORD_LEN];
+union SB {
+    char SBrecord[RECORD_LEN];
 
-    union {
+    struct {
 
         char version [9];
         char datum [8];
@@ -65,29 +64,47 @@ struct SB {
         char schluessel_neu[11]; //217
         char hnr_von_neu[8];
         char hnr_bis_neu[8];
-        char satzende; //'$' -> wird zu 0x00
-    } _SB;
+        char satzende; //'$' 
+    } ;
 };
 
+struct Ort {
+    std::string kgs;
+    std::string alort;
+    std::string name;
+    std::string plz;
+ 
+    void clear() {
+        name.clear();
+        plz.clear();
+        kgs.clear();
+        alort.clear();
+    }
+};
 struct Strasse {
+    std::string kgs;
+    std::string alort;
     std::string name;
     std::string hnr_von;
     std::string hnr_bis;
-    int code;
+    std::string name22;
+    std::string code;
+    
     void clear() {
+        kgs.clear();
+        alort.clear();
         name.clear();
+        name22.clear();
         hnr_von.clear();
         hnr_bis.clear();
-        code = 0;
+        code.clear();
     }
 };
 
 struct PostleitDataResultRecord {
-    std::string plz;
-    std::string ort;
+    Ort ort;
     Strasse str;
     void clear() {
-        plz.clear();
         ort.clear();
         str.clear();
     }

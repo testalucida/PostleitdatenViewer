@@ -17,7 +17,7 @@ void PostleitdatenManager::
     if( !existPartFiles() ) {
         writePartFiles();
     }
-    if( _plList.size() < 1 ) {
+    if( _ortList.size() < 1 ) {
         loadPartFiles();
     }
 
@@ -73,77 +73,42 @@ void PostleitdatenManager::writePartFiles() {
 
 }
 
-//void PostleitdatenManager::loadPartFiles() {
-//    ifstream plfile( _PLfile );
-//    string line;
-//
-//    PL *pPL = new PL;
-//    while( plfile.get( pPL->PLrecord, PL_RECORD_LEN ) ) {
-//        pPL->satzende = 0x00;
-//        fprintf( stderr, "%s\n", pPL->PLrecord );
-//        _plList.push_back( pPL );
-//        PL &pl = *pPL;
-//        pPL = new PL;
-//    }
-//
-//    plfile.close();
-//
-//    printf( "Anzahl PL-Sätze: %d\n", _plList.size() );
-//    printPL();
-//
-//    ifstream sbfile( _SBfile );
-//    SB *pSB = new SB;
-//    while( sbfile.get( pSB->SBrecord, SB_RECORD_LEN )) {
-//        pSB->_SB.satzende = 0x00;
-//        _sbList.push_back( pSB );
-//        pSB = new SB;
-//    }
-//
-//    sbfile.close();
-//
-//    printf( "Anzahl SB-Sätze: %d\n", _sbList.size() );
-//}
-
 void PostleitdatenManager::loadPartFiles() {
     ifstream plfile( _PLfile );
     string line;
+    char delim = 13;
 
-    if( plfile.good() ) {
-
-        while( getline( plfile, line ) ) {
-            fprintf( stderr, "Satzlaenge: %d\n%s\n", line.length(), line.c_str() );
+    if( plfile.good() )  {
+        PL pl;
+        while( plfile.getline( pl.PLrecord, sizeof(pl.PLrecord), delim ) ) {
+            Ort *pOrt = new Ort;
+            pOrt->kgs.append( pl.kgs, sizeof( pl.kgs ) );
+            pOrt->alort.append( pl.alort, sizeof( pl.alort ) );
+            pOrt->name.append( pl.oname, sizeof( pl.oname ) );
+            pOrt->plz.append( pl.plz, sizeof( pl.plz ) );
+            _ortList.push_back( pOrt );
         }
 
         plfile.close();
-
-        printf( "Anzahl PL-Sätze: %d\n", _plList.size() );
-        printPL();
-
     }
-}
-
-
-//void PostleitdatenManager::printPL() const {
-//    for( auto itr = _plList.begin(); itr != _plList.end(); itr++ ) {
-//        PL *pl = *itr;
-//
-//        print( "Version: ", pl->_PL.version, 9 );
-//        print( "\tDatum: ", pl->_PL.datum, 8, true );
-//        print( "PLZ: ", pl->_PL.plz, 5 );
-//        print( "\tOrt: ", pl->_PL.oname, 40, true );
-//        print( "KGS: ", pl->_PL.kgs, 8 );
-//    }
-//}
-
-void PostleitdatenManager::printPL() const {
-    for( auto itr = _plList.begin(); itr != _plList.end(); itr++ ) {
-        PL *pl = *itr;
-
-        print( "Version: ", pl->version, 9 );
-        print( "\tDatum: ", pl->datum, 8, true );
-        print( "PLZ: ", pl->plz, 5 );
-        print( "\tOrt: ", pl->oname, 40, true );
-        print( "KGS: ", pl->kgs, 8 );
+        
+    ifstream sbfile( _SBfile );
+    if( sbfile.good() ) {
+        SB sb;
+        while( sbfile.getline( sb.SBrecord, sizeof(sb.SBrecord), delim ) ) {
+            Strasse *pStr = new Strasse;
+            pStr->kgs.append( sb.kgs, sizeof( sb.kgs ) );
+            pStr->alort.append( sb.alort, sizeof( sb.alort ) );
+            pStr->name.append( sb.name46, sizeof( sb.name46 ) );
+            pStr->hnr_von.append( sb.hnr_von, sizeof( sb.hnr_von ) );
+            pStr->hnr_bis.append( sb.hnr_bis, sizeof( sb.hnr_bis ) );
+            pStr->name22.append( sb.name22, sizeof( sb.name22 ) );
+            pStr->code.append( sb.code, sizeof( sb.code ) );
+            
+            _strasseList.push_back( pStr );
+        }
+        
+        sbfile.close();
     }
 }
 
@@ -169,36 +134,30 @@ void PostleitdatenManager::
     getKgs( plz, ort, kgs );
 }
 
-void PostleitdatenManager::getKgs( const std::string& plz, const std::string& ort, string& kgs ) const {
+void PostleitdatenManager::getKgs( const string& plz, const string& ort, string& kgs ) const {
 
-    auto itr = _plList.begin();
-    for( ; itr != _plList.end(); itr++ ) {
-        PL* pPL = *itr;
-        string p, o;
-        p.append( pPL->plz, 5 );
-        o.append( pPL->oname, 40 );
-        fprintf( stderr, "PLZ: %s, Ort: %s\n", p.c_str(), o.c_str() );
-        if( !strncmp( pPL->plz, plz.c_str(), 5 ) &&
-            !strncmp( pPL->oname, ort.c_str(), 40 ) )
-        {
-            kgs.append( pPL->kgs, 8 );
-            break;
+    auto itr = _ortList.begin();
+    for( ; itr != _ortList.end(); itr++ ) {
+        Ort* pOrt = *itr;
+        if( pOrt->plz == plz && pOrt->name == ort ) {
+            kgs = pOrt->kgs;
+            return;
         }
     }
+    kgs = "<not found>";
     return;
 }
 
 void PostleitdatenManager::getKgs( const std::string& plz, KgsList& kgsList ) const {
 
-    auto itr = _plList.begin();
-    for( ; itr != _plList.end(); itr++ ) {
-        PL* pPL = *itr;
-        if( !strcmp( pPL->plz, plz.c_str() ) )
-        {
+    auto itr = _ortList.begin();
+    for( ; itr != _ortList.end(); itr++ ) {
+        Ort* pOrt = *itr;
+        if( pOrt->plz == plz ) {
             Kgs kgs;
-            kgs.plz.append( pPL->plz, 5 );
-            kgs.ort.append( pPL->oname, 40 );
-            kgs.kgs.append( pPL->kgs, 8 );
+            kgs.plz = pOrt->plz;
+            kgs.ort = pOrt->name;
+            kgs.kgs = pOrt->kgs;
             kgsList.push_back( kgs );
         }
     }

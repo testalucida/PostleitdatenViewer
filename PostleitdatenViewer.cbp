@@ -44,6 +44,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="PostleitData.h" />
+		<Unit filename="PostleitTableModel.cpp" />
+		<Unit filename="PostleitTableModel.h" />
 		<Unit filename="PostleitdatenManager.cpp" />
 		<Unit filename="PostleitdatenManager.h" />
 		<Unit filename="main.cpp" />

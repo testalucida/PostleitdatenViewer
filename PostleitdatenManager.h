@@ -42,8 +42,8 @@ class PostleitdatenManager
         std::string _SBfile;
         std::string _PLfile;
         std::string _version;
-        std::list<PL*> _plList;
-        std::list<SB*> _sbList;
+        std::list<Ort*> _ortList;
+        std::list<Strasse*> _strasseList;
 };
 
 #endif // POSTLEITDATENMANAGER_H
