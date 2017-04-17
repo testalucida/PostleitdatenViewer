@@ -6,8 +6,6 @@
 #include "PostleitData.h"
 
 
-typedef std::list<Kgs> KgsList;
-
 class PostleitdatenManager
 {
     public:
@@ -28,12 +26,13 @@ class PostleitdatenManager
                                           const std::string& ort,
                                           PostleitDataResultRecordList& outList ) const;
 
-        bool getKgs( const std::string& plz, const std::string& ort, Kgs& kgs ) const;
-        bool getKgs( const std::string& plz, KgsList& kgsList ) const;
-        bool getStrassen( const KgsList&, const std::string&, PostleitDataResultRecordList& ) const;
+        bool getOrtList( const std::string& plz, const std::string& ort, OrtList& ) const;
+        //bool getKgs( const std::string& plz, KgsList& kgsList ) const;
+        bool getStrassen( const OrtList&, const std::string&, PostleitDataResultRecordList& ) const;
         inline bool matches( const std::string&, const std::string& ) const;
         void printPL() const;
-        void print( const char* pLabel, const char* s, int n, bool newLine = false ) const;
+        void print( const PostleitDataResultRecordList & ) const;
+        //void print( const char* pLabel, const char* s, int n, bool newLine = false ) const;
         //std::string rtrim( const std::string& str ) const;
         inline void copyRTrimmed( std::string& dest, const char* pSrc, int srcLen );
     private:

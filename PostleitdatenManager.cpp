@@ -112,83 +112,92 @@ void PostleitdatenManager::loadPartFiles() {
     }
 }
 
-void PostleitdatenManager::print( const char* pLabel, const char* s, int n, bool newLine ) const {
-    if( pLabel ) {
-        fprintf( stderr, "%s", pLabel );
-    }
-    for( int i = 0; i < n; i++ ) {
-        fprintf( stderr, "%c", *s++ );
-    }
-    if( newLine ) {
-        fprintf( stderr, "\n" );
-    }
-}
+//void PostleitdatenManager::print( const char* pLabel, const char* s, int n, bool newLine ) const {
+//    if( pLabel ) {
+//        fprintf( stderr, "%s", pLabel );
+//    }
+//    for( int i = 0; i < n; i++ ) {
+//        fprintf( stderr, "%c", *s++ );
+//    }
+//    if( newLine ) {
+//        fprintf( stderr, "\n" );
+//    }
+//}
 
 void PostleitdatenManager::
     getPostleitDataResultRecords( const std::string& plz,
                                   const std::string& ort,
                                   PostleitDataResultRecordList& outList ) const
 {
-    //erst mit plz und ort die Kreisgemeindeschlüssel finden:
-    Kgs kgs;
-    if( getKgs( plz, ort, kgs ) ) {
-        //dann alle Straßen mit diesem Kreisgemeindeschlüssel finden:
-        PostleitDataResultRecord *pRec = new PostleitDataResultRecord;
-        pRec->ort.kgs = kgs.kgs;
-        pRec->ort.alort = kgs.alort;
-        pRec->ort.name = ort;
-        pRec->ort.plz = plz;
+    //erst mit plz und ort die passenden Orte finden:
+    OrtList ortList;
+    if( getOrtList( plz, ort, ortList ) ) {
+        //dann alle Straßen mit diesen Kreisgemeindeschlüsseln finden:
+        getStrassen( ortList, "", outList );
+        print( outList );
     }
 }
 
-bool PostleitdatenManager::getKgs( const string& plz, const string& ort, Kgs& kgs ) const {
-
-    auto itr = _ortList.begin();
-    for( ; itr != _ortList.end(); itr++ ) {
-        Ort* pOrt = *itr;
-        if( pOrt->plz == plz && pOrt->name == ort ) {
-            kgs.plz = pOrt->plz;
-            kgs.ort = pOrt->name;
-            kgs.kgs = pOrt->kgs;
-            kgs.alort = pOrt->alort;
-            return true;
-        }
+void PostleitdatenManager::print( const PostleitDataResultRecordList &list ) const {
+    fprintf( stderr, "Anzahl Einträge: %d\n", list.size() );
+    for( auto itr = list.begin(); itr != list.end(); itr++ ) {
+        PostleitDataResultRecord *rec = *itr;
+        fprintf( stderr, "%s %s %s\n", rec->ort.plz.c_str(), rec->ort.name.c_str(), rec->str.name.c_str() );
     }
-    kgs.kgs = kgs.alort = "<not found>";
-    return false;
-}
-
-bool PostleitdatenManager::getKgs( const string& plz, KgsList& kgsList ) const {
-
-    auto itr = _ortList.begin();
-    for( ; itr != _ortList.end(); itr++ ) {
-        Ort* pOrt = *itr;
-        if( pOrt->plz == plz ) {
-            Kgs kgs;
-            kgs.plz = pOrt->plz;
-            kgs.ort = pOrt->name;
-            kgs.kgs = pOrt->kgs;
-            kgs.alort = pOrt->alort;
-            kgsList.push_back( kgs );
-        }
-    }
-    
-    return !kgsList.empty();
 }
 
 bool PostleitdatenManager::
-getStrassen( const KgsList& kgsList, const string& strFilter, PostleitDataResultRecordList& outList ) const 
+getOrtList( const string& suchPlz, const string& suchOrt, OrtList& list ) const 
 {
-    for( auto kitr = kgsList.begin(); kitr != kgsList.end(); kitr++ ) {
-        Kgs kgs = *kitr;
+    auto itr = _ortList.begin();
+    for( ; itr != _ortList.end(); itr++ ) {
+        Ort *pOrt = *itr;
+        if( !suchPlz.empty() ) {
+            if( suchPlz != pOrt->plz ) {
+                continue;
+            }
+        }
+        
+        if( !suchOrt.empty() ) {
+            if( suchOrt != pOrt->name ) {
+                continue;
+            }
+        }
+        
+        list.push_back( pOrt );
+    }
+    
+    return !list.empty();
+}
+
+//bool PostleitdatenManager::getKgs( const string& plz, KgsList& kgsList ) const {
+//
+//    auto itr = _ortList.begin();
+//    for( ; itr != _ortList.end(); itr++ ) {
+//        Ort* pOrt = *itr;
+//        if( pOrt->plz == plz ) {
+//            Kgs kgs;
+//            kgs.plz = pOrt->plz;
+//            kgs.ort = pOrt->name;
+//            kgs.kgs = pOrt->kgs;
+//            kgs.alort = pOrt->alort;
+//            kgsList.push_back( kgs );
+//        }
+//    }
+//    
+//    return !kgsList.empty();
+//}
+
+bool PostleitdatenManager::
+getStrassen( const OrtList& ortList, const string& strFilter, PostleitDataResultRecordList& outList ) const 
+{
+    for( auto kitr = ortList.begin(); kitr != ortList.end(); kitr++ ) {
+        Ort *pOrt = *kitr;
         for( auto sitr = _strasseList.begin(); sitr != _strasseList.end(); sitr++ ) {
             Strasse *pStr = *sitr;
-            if( kgs.kgs == pStr->kgs && matches(strFilter, pStr->name ) ) {
+            if( pOrt->kgs == pStr->kgs && matches(strFilter, pStr->name ) ) {
                 PostleitDataResultRecord *pOutRec = new PostleitDataResultRecord;
-                pOutRec->ort.name = kgs.ort;
-                pOutRec->ort.plz = kgs.plz;
-                pOutRec->ort.alort = kgs.alort;
-                pOutRec->ort.kgs = kgs.kgs;
+                pOutRec->ort = *pOrt;
                 pOutRec->str = *pStr;
                 outList.push_back( pOutRec );
             }

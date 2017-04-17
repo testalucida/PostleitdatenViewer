@@ -68,9 +68,7 @@ union SB {
     } ;
 };
 
-struct Kgs {
-    std::string plz;
-    std::string ort;
+struct KgsAlort {
     std::string kgs;
     std::string alort;
 };
@@ -125,6 +123,8 @@ struct PostleitDataInParm {
 
 };
 
+typedef std::list<KgsAlort> KgsAlortList;
+typedef std::list<Ort*> OrtList;
 typedef std::list<PostleitDataResultRecord*> PostleitDataResultRecordList;
 
 #endif // POSTLEITDATA_H
