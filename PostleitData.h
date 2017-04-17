@@ -68,6 +68,13 @@ union SB {
     } ;
 };
 
+struct Kgs {
+    std::string plz;
+    std::string ort;
+    std::string kgs;
+    std::string alort;
+};
+
 struct Ort {
     std::string kgs;
     std::string alort;

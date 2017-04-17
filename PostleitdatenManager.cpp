@@ -177,12 +177,32 @@ bool PostleitdatenManager::getKgs( const string& plz, KgsList& kgsList ) const {
 }
 
 bool PostleitdatenManager::
-getStrassen( const KgsList& kgsList, PostleitDataResultRecordList& outList ) const 
+getStrassen( const KgsList& kgsList, const string& strFilter, PostleitDataResultRecordList& outList ) const 
 {
-    for( auto itr = _strasseList.begin(); itr != _strasseList.end(); itr++ ) {
-        
+    for( auto kitr = kgsList.begin(); kitr != kgsList.end(); kitr++ ) {
+        Kgs kgs = *kitr;
+        for( auto sitr = _strasseList.begin(); sitr != _strasseList.end(); sitr++ ) {
+            Strasse *pStr = *sitr;
+            if( kgs.kgs == pStr->kgs && matches(strFilter, pStr->name ) ) {
+                PostleitDataResultRecord *pOutRec = new PostleitDataResultRecord;
+                pOutRec->ort.name = kgs.ort;
+                pOutRec->ort.plz = kgs.plz;
+                pOutRec->ort.alort = kgs.alort;
+                pOutRec->ort.kgs = kgs.kgs;
+                pOutRec->str = *pStr;
+                outList.push_back( pOutRec );
+            }
+        }
+    }
+}
+
+bool PostleitdatenManager::
+matches( const std::string& filter, const std::string& strasse ) const {
+    if( filter.empty() || filter == "*" ) {
+        return true;
     }
     
+    return !strasse.compare( 0, filter.length(), filter );
 }
 
 /*
