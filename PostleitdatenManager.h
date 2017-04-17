@@ -9,6 +9,7 @@ struct Kgs {
     std::string plz;
     std::string ort;
     std::string kgs;
+    std::string alort;
 };
 
 typedef std::list<Kgs> KgsList;
@@ -33,10 +34,13 @@ class PostleitdatenManager
                                           const std::string& ort,
                                           PostleitDataResultRecordList& outList ) const;
 
-        void getKgs( const std::string& plz, const std::string& ort, std::string& kgs ) const;
-        void getKgs( const std::string& plz, KgsList& kgsList ) const;
+        bool getKgs( const std::string& plz, const std::string& ort, Kgs& kgs ) const;
+        bool getKgs( const std::string& plz, KgsList& kgsList ) const;
+        bool getStrassen( const KgsList&, PostleitDataResultRecordList& ) const;
         void printPL() const;
         void print( const char* pLabel, const char* s, int n, bool newLine = false ) const;
+        //std::string rtrim( const std::string& str ) const;
+        inline void copyRTrimmed( std::string& dest, const char* pSrc, int srcLen );
     private:
         std::string _plfilename;
         std::string _SBfile;

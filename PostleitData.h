@@ -81,6 +81,7 @@ struct Ort {
         alort.clear();
     }
 };
+
 struct Strasse {
     std::string kgs;
     std::string alort;
@@ -117,6 +118,6 @@ struct PostleitDataInParm {
 
 };
 
-typedef std::list<PostleitDataResultRecord> PostleitDataResultRecordList;
+typedef std::list<PostleitDataResultRecord*> PostleitDataResultRecordList;
 
 #endif // POSTLEITDATA_H
